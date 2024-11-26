@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!-- 是否生成注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- JDBC 连接配置 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/taskmanagement?useSSL=false&amp;serverTimezone=UTC"
+                        userId="root"
+                        password="Zk@041916">
+        </jdbcConnection>
+
+        <!-- Java Model 文件生成位置 -->
+        <javaModelGenerator targetPackage="com.algonquin.webassignment2.demos.repository.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- SQL 映射文件生成位置 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- Mapper 接口文件生成位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.algonquin.webassignment2.demos.repository.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 配置需要生成代码的表 -->
+        <table tableName="users" catalog="taskmanagement" schema="taskmanagement" domainObjectName="Users"/>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.algonquin.webassignment2.demos.repository.mapper.TasksBizMapper">
+  <resultMap id="BaseResultMap" type="com.algonquin.webassignment2.demos.repository.model.Tasks">
+    <id column="taskId" jdbcType="INTEGER" property="taskId" />
+    <result column="taskName" jdbcType="VARCHAR" property="taskName" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="dueDate" jdbcType="DATE" property="dueDate" />
+    <result column="taskStatus" jdbcType="INTEGER" property="taskStatus" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    taskId, taskName, priority, dueDate, taskStatus, userId
+  </sql>
+
+</mapper>
