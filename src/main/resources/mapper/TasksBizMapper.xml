@@ -12,5 +12,26 @@
   <sql id="Base_Column_List">
     taskId, taskName, priority, dueDate, taskStatus, userId
   </sql>
+    <select id="listByUserId" resultType="com.algonquin.webassignment2.demos.repository.model.Tasks">
+        select
+        <include refid="Base_Column_List"/>
+        from taskmanagement.tasks
+        where userId = #{userId}
+        <if test="priorities!=null">
+            and priority in
+            <foreach collection="priorities" open="(" separator="," close=")" item="i" >
+                #{i}
+            </foreach>
+        </if>
+        <if test="taskStatus!=null">
+            and taskStatus in
+            <foreach collection="taskStatus" open="(" separator="," close=")" item="i" >
+                #{i}
+            </foreach>
+        </if>
+        <if test="dueDate!=null">
+            and dueDate = #{dueDate}
+        </if>
+    </select>
 
 </mapper>
