@@ -6,6 +6,7 @@ import com.algonquin.webassignment2.demos.repository.mapper.UsersBizMapper;
 import com.algonquin.webassignment2.demos.repository.model.Tasks;
 import com.algonquin.webassignment2.demos.repository.model.Users;
 import com.algonquin.webassignment2.demos.request.LoginRequest;
+import com.algonquin.webassignment2.demos.request.RegistrationRequest;
 import com.algonquin.webassignment2.demos.request.TaskDisplayRequest;
 import com.algonquin.webassignment2.demos.response.TaskInfoVO;
 import com.algonquin.webassignment2.demos.response.UserInfoVO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class WebController {
     private TasksBizMapper tasksBizMapper;
     @Resource
     private TaskLogsBizMapper taskLogsBizMapper;
-    @CrossOrigin(origins = "http://127.0.0.1:8081")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/login")
     public RestResponse<UserInfoVO> getUserByName(@RequestBody LoginRequest request) {
         String loginName = request.getLoginName();
@@ -44,7 +46,7 @@ public class WebController {
         return RestResponse.success(userInfoVO, "User login successfully!");
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:8081")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/task/display")
     public RestResponse<List<TaskInfoVO>> getTasks(@RequestBody TaskDisplayRequest request) {
         if (Objects.isNull(request.getUserId())) {
@@ -62,6 +64,26 @@ public class WebController {
             return taskInfoVO;
         }).collect(Collectors.toList());
         return RestResponse.success(taskInfoVOS, "Tasks display successfully");
+    }
+
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @PostMapping("/registration")
+    public RestResponse<Boolean> registration(@RequestBody RegistrationRequest request) {
+        if (Objects.isNull(request.getLoginName()) || Objects.isNull(request.getPassword())
+                || Objects.isNull(request.getEmail())) {
+            return RestResponse.fail(null, "Parameter valid fail");
+        }
+        Users exist = usersBizMapper.selectByNameOrEmail(request.getLoginName(), request.getEmail());
+        if (Objects.nonNull(exist)) {
+            return RestResponse.fail(null, "User duplicate");
+        }
+        Users users = new Users();
+        BeanUtils.copyProperties(request, users);
+        users.setPasswd(request.getPassword());
+        List<Users> insert = new ArrayList<>();
+        insert.add(users);
+        usersBizMapper.insertBatch(insert);
+        return RestResponse.success(true, "Register user successfully");
     }
 
 }
