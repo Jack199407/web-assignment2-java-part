@@ -3,8 +3,10 @@ package com.algonquin.webassignment2.demos.web;
 import com.algonquin.webassignment2.demos.repository.mapper.TaskLogsBizMapper;
 import com.algonquin.webassignment2.demos.repository.mapper.TasksBizMapper;
 import com.algonquin.webassignment2.demos.repository.mapper.UsersBizMapper;
+import com.algonquin.webassignment2.demos.repository.model.TaskLogs;
 import com.algonquin.webassignment2.demos.repository.model.Tasks;
 import com.algonquin.webassignment2.demos.repository.model.Users;
+import com.algonquin.webassignment2.demos.request.AddTaskRequest;
 import com.algonquin.webassignment2.demos.request.LoginRequest;
 import com.algonquin.webassignment2.demos.request.RegistrationRequest;
 import com.algonquin.webassignment2.demos.request.TaskDisplayRequest;
@@ -53,7 +55,7 @@ public class WebController {
             return RestResponse.fail(null, "User Id can not be null");
         }
         LocalDateTime dueDate = null;
-        if (Objects.nonNull(request.getDueDate())) {
+        if (Objects.nonNull(request.getDueDate()) && !"".equals(request.getDueDate())) {
             dueDate = LocalDateTime.parse(request.getDueDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }
         List<Tasks> tasks = tasksBizMapper.listByUserId(request.getUserId(), request.getPriority(),
@@ -61,6 +63,7 @@ public class WebController {
         List<TaskInfoVO> taskInfoVOS = tasks.stream().map(r -> {
             TaskInfoVO taskInfoVO = new TaskInfoVO();
             BeanUtils.copyProperties(r, taskInfoVO);
+            taskInfoVO.setDueDate(r.getDueDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             return taskInfoVO;
         }).collect(Collectors.toList());
         return RestResponse.success(taskInfoVOS, "Tasks display successfully");
@@ -85,5 +88,33 @@ public class WebController {
         usersBizMapper.insertBatch(insert);
         return RestResponse.success(true, "Register user successfully");
     }
-
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @PostMapping("/addTask")
+    public RestResponse<Boolean> addTask(@RequestBody AddTaskRequest request) {
+        if (Objects.isNull(request)) {
+            return RestResponse.fail(null, "Parameter valid fail");
+        }
+        LocalDateTime dueDate = request.getDueDate().atTime(0, 0, 0);
+        Tasks tasks = new Tasks();
+        BeanUtils.copyProperties(request, tasks);
+        tasks.setDueDate(dueDate);
+        List<Tasks> insert = new ArrayList<>();
+        insert.add(tasks);
+        tasksBizMapper.insertBatch(insert);
+        Tasks lastOne = tasksBizMapper.selectLastOne();
+        Integer taskId = lastOne.getTaskId();
+        TaskLogs taskLogs = new TaskLogs();
+        taskLogs.setTaskId(taskId);
+        taskLogs.setOperatorUserId(request.getUserId());
+        taskLogs.setOperationType(0);
+        taskLogs.setChangeTime(LocalDateTime.now());
+        taskLogs.setTaskName(request.getTaskName());
+        taskLogs.setPriority(request.getPriority());
+        taskLogs.setDueDate(dueDate);
+        taskLogs.setTaskStatus(request.getTaskStatus());
+        List<TaskLogs> logs = new ArrayList<>();
+        logs.add(taskLogs);
+        taskLogsBizMapper.insertBatch(logs);
+        return RestResponse.success(true, "Task add successfully");
+    }
 }

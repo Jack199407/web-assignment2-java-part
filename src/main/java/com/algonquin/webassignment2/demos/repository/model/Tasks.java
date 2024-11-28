@@ -1,6 +1,6 @@
 package com.algonquin.webassignment2.demos.repository.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Tasks {
     private Integer taskId;
@@ -9,7 +9,7 @@ public class Tasks {
 
     private Integer priority;
 
-    private Date dueDate;
+    private LocalDateTime dueDate;
 
     private Integer taskStatus;
 
@@ -39,11 +39,11 @@ public class Tasks {
         this.priority = priority;
     }
 
-    public Date getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 

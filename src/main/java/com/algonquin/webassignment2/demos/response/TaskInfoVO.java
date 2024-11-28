@@ -11,7 +11,7 @@ public class TaskInfoVO {
 
     private Integer priority;
 
-    private Date dueDate;
+    private String dueDate;
 
     private Integer taskStatus;
 

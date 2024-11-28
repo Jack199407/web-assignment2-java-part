@@ -10,4 +10,8 @@ import java.util.List;
 public interface TasksBizMapper {
     List<Tasks> listByUserId(@Param("userId") Integer userId, @Param("priorities") List<Integer> priorities,
                              @Param("dueDate") LocalDateTime dueDate, @Param("taskStatus") List<Integer> taskStatus);
+
+    void insertBatch(@Param("tasks") List<Tasks> tasks);
+
+    Tasks selectLastOne();
 }

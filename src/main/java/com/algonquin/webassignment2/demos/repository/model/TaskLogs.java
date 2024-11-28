@@ -1,6 +1,6 @@
 package com.algonquin.webassignment2.demos.repository.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class TaskLogs {
     private Integer logId;
@@ -11,13 +11,13 @@ public class TaskLogs {
 
     private Integer operationType;
 
-    private Date changeTime;
+    private LocalDateTime changeTime;
 
     private String taskName;
 
     private Integer priority;
 
-    private Date dueDate;
+    private LocalDateTime dueDate;
 
     private Integer taskStatus;
 
@@ -53,11 +53,11 @@ public class TaskLogs {
         this.operationType = operationType;
     }
 
-    public Date getChangeTime() {
+    public LocalDateTime getChangeTime() {
         return changeTime;
     }
 
-    public void setChangeTime(Date changeTime) {
+    public void setChangeTime(LocalDateTime changeTime) {
         this.changeTime = changeTime;
     }
 
@@ -77,11 +77,11 @@ public class TaskLogs {
         this.priority = priority;
     }
 
-    public Date getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
